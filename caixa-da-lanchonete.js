@@ -46,3 +46,5 @@ class CaixaDaLanchonete {
     return `R$ ${total.toFixed(2).replace('.', ',')}`;
   }
 }
+
+module.exports = CaixaDaLanchonete;
