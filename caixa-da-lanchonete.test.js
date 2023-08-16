@@ -10,9 +10,9 @@ describe('CaixaDaLanchonete', () => {
   it('deve calcular o valor correto da compra', () => {
     const valor = caixa.calcularValorDaCompra('credito', [
       'cafe,2',
-      'sanduiche,1',
+      'combo1,1',
     ]);
-    expect(valor).toBe('R$ 15,93');
+    expect(valor).toBe('R$ 15,96');
   });
 
   it('deve retornar mensagem de erro para forma de pagamento inválida', () => {
@@ -28,5 +28,10 @@ describe('CaixaDaLanchonete', () => {
   it('deve retornar mensagem de erro para compra sem itens', () => {
     const mensagem = caixa.calcularValorDaCompra('dinheiro', []);
     expect(mensagem).toBe('Não há itens no carrinho de compra!');
+  });
+
+  it('deve retornar que o item extra não pode ser pedido sem o principal', () => {
+    const mensagem = caixa.calcularValorDaCompra('debito', ['chantily,1']);
+    expect(mensagem).toBe('Item extra não pode ser pedido sem o principal');
   });
 });

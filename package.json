@@ -1,4 +1,10 @@
 {
+  "name": "lanchonete",
+  "version": "1.0.0",
+  "description": "Exemplo de testes com Jest",
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
     "jest": "^29.6.2"
   }

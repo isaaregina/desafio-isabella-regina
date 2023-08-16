@@ -1,14 +1,14 @@
 class CaixaDaLanchonete {
   constructor() {
     this.cardapio = {
-      cafe: 3.0,
-      chantily: 1.5,
-      suco: 6.2,
-      sanduiche: 6.5,
-      queijo: 2.0,
-      salgado: 7.25,
-      combo1: 9.5,
-      combo2: 7.5,
+      cafe: { valor: 3.0, extraDe: null },
+      chantily: { valor: 1.5, extraDe: 'cafe' },
+      suco: { valor: 6.2, extraDe: null },
+      sanduiche: { valor: 6.5, extraDe: null },
+      queijo: { valor: 2.0, extraDe: 'sanduiche' },
+      salgado: { valor: 7.25, extraDe: null },
+      combo1: { valor: 9.5, extraDe: null },
+      combo2: { valor: 7.5, extraDe: null },
     };
 
     this.formasDePagamento = {
@@ -28,16 +28,42 @@ class CaixaDaLanchonete {
     }
 
     let total = 0;
+    const itensPrincipais = {}; // Para rastrear os itens principais pedidos
+    let itemExtraSemPrincipal = false;
 
     for (const itemInfo of itens) {
-      const [codigo, quantidade] = itemInfo.split(',');
+      const [codigo, quantidadeStr] = itemInfo.split(',');
 
-      if (!this.cardapio[codigo]) {
+      const item = this.cardapio[codigo];
+
+      if (!item) {
         return 'Item inválido!';
       }
 
-      const precoItem = this.cardapio[codigo];
-      total += precoItem * quantidade;
+      if (item.extraDe && !itensPrincipais[item.extraDe]) {
+        itemExtraSemPrincipal = true;
+        break; // Não precisamos continuar verificando os demais itens se já encontramos um item extra sem principal
+      }
+
+      const precoItem = item.valor;
+      const quantidade = parseInt(quantidadeStr);
+
+      if (!isNaN(quantidade)) {
+        total += precoItem * quantidade;
+      } else {
+        return 'Quantidade inválida!';
+      }
+
+      if (
+        !item.extraDe ||
+        (!item.extraDe.startsWith('extra') && !itensPrincipais[item.extraDe])
+      ) {
+        itensPrincipais[codigo] = true; // Marca o item principal como pedido
+      }
+    }
+
+    if (itemExtraSemPrincipal) {
+      return 'Item extra não pode ser pedido sem o principal';
     }
 
     const formaDePagamentoInfo = this.formasDePagamento[formaDePagamento];
